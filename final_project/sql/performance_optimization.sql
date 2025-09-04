@@ -45,7 +45,6 @@ CREATE FULLTEXT INDEX idx_authors_name_bio ON authors(first_name, last_name, bio
 -- =====================================================
 
 -- Query 1: Customer Order History Analysis
--- This query will be used to demonstrate index effectiveness
 SELECT 
     c.customer_id,
     CONCAT(c.first_name, ' ', c.last_name) as customer_name,
@@ -55,12 +54,10 @@ SELECT
     MAX(o.order_date) as last_order_date
 FROM customers c
 INNER JOIN orders o ON c.customer_id = o.customer_id
-WHERE o.status IN ('Delivered', 'Shipped')
-    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+WHERE o.status IN ('Delivered', 'Shipped', 'Processing')
+    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 24 MONTH)
 GROUP BY c.customer_id, c.first_name, c.last_name
-HAVING total_orders >= 3
-ORDER BY total_spent DESC
-LIMIT 20;
+ORDER BY total_spent DESC;
 
 -- Query 2: Book Sales Performance Analysis
 SELECT 
@@ -91,8 +88,8 @@ SELECT
     ROUND(AVG(oi.total_price), 2) as avg_order_value
 FROM orders o
 INNER JOIN order_items oi ON o.order_id = oi.order_id
-WHERE o.status IN ('Delivered', 'Shipped')
-    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+WHERE o.status IN ('Delivered', 'Shipped', 'Processing')
+    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 36 MONTH)
 GROUP BY DATE_FORMAT(o.order_date, '%Y-%m')
 ORDER BY sales_month;
 
@@ -112,8 +109,8 @@ SELECT
     MAX(o.order_date) as last_order_date
 FROM customers c
 INNER JOIN orders o ON c.customer_id = o.customer_id
-WHERE o.status IN ('Delivered', 'Shipped')
-    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+WHERE o.status IN ('Delivered', 'Shipped', 'Processing')
+    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 24 MONTH)
 GROUP BY c.customer_id, c.first_name, c.last_name
 HAVING total_orders >= 3
 ORDER BY total_spent DESC
@@ -131,12 +128,11 @@ SELECT
     SUM(o.total_amount) as total_spent,
     AVG(o.total_amount) as avg_order_value
 FROM orders o
-WHERE o.status IN ('Delivered', 'Shipped')
-    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+WHERE o.status IN ('Delivered', 'Shipped', 'Processing')
+    AND o.order_date >= DATE_SUB(CURDATE(), INTERVAL 24 MONTH)
 GROUP BY o.customer_id
 HAVING total_orders >= 3
-ORDER BY total_spent DESC
-LIMIT 20;
+ORDER BY total_spent DESC;
 
 -- Optimized Query 2: Using proper index for book search
 -- This query uses the full-text index for book search
@@ -150,8 +146,7 @@ FROM books b
 INNER JOIN categories c ON b.category_id = c.category_id
 WHERE MATCH(b.title, b.description) AGAINST('fiction mystery' IN NATURAL LANGUAGE MODE)
     AND b.stock_quantity > 0
-ORDER BY relevance_score DESC
-LIMIT 10;
+ORDER BY relevance_score DESC;
 
 -- Optimized Query 3: Using covering index for inventory analysis
 SELECT 
