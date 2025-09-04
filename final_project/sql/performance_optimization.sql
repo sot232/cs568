@@ -77,7 +77,7 @@ WHERE b.stock_quantity > 0
 GROUP BY b.book_id, b.title, c.name
 HAVING total_sales > 0
 ORDER BY total_revenue DESC
-LIMIT 15;
+LIMIT 1000;
 
 -- Query 3: Monthly Sales Trend Analysis
 SELECT 
