@@ -49,7 +49,6 @@ CREATE INDEX idx_order_items_book_quantity_price ON order_items(book_id, quantit
 -- Composite index for book reviews book rating
 CREATE INDEX idx_book_reviews_book_rating ON book_reviews(book_id, rating);
 
-
 -- Composite index for order items book order id quantity and price
 CREATE INDEX idx_order_items_book_covering ON order_items(book_id, order_id, quantity, total_price);
 
