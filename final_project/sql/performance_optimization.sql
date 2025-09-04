@@ -55,7 +55,7 @@ CREATE INDEX idx_order_items_book_covering ON order_items(book_id, order_id, qua
 -- Composite index for books stock quantity book id title category id
 CREATE INDEX idx_books_covering ON books(stock_quantity, book_id, title, category_id);
 
--- Composite index for categories category id
+-- Single column index for categories category id
 CREATE INDEX idx_categories_id ON categories(category_id);
 
 -- =====================================================
