@@ -40,6 +40,25 @@ CREATE FULLTEXT INDEX idx_books_title_description ON books(title, description);
 -- Full-text index for author search
 CREATE FULLTEXT INDEX idx_authors_name_bio ON authors(first_name, last_name, biography);
 
+-- Composite index for order status and order id
+CREATE INDEX idx_orders_status_order_id ON orders(status, order_id);
+
+-- Composite index for order items book quantity and price
+CREATE INDEX idx_order_items_book_quantity_price ON order_items(book_id, quantity, total_price);
+
+-- Composite index for book reviews book rating
+CREATE INDEX idx_book_reviews_book_rating ON book_reviews(book_id, rating);
+
+
+-- Composite index for order items book order id quantity and price
+CREATE INDEX idx_order_items_book_covering ON order_items(book_id, order_id, quantity, total_price);
+
+-- Composite index for books stock quantity book id title category id
+CREATE INDEX idx_books_covering ON books(stock_quantity, book_id, title, category_id);
+
+-- Composite index for categories category id
+CREATE INDEX idx_categories_id ON categories(category_id);
+
 -- =====================================================
 -- PERFORMANCE ANALYSIS QUERIES
 -- =====================================================
