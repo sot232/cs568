@@ -439,7 +439,7 @@ CREATE TABLE IF NOT EXISTS mv_monthly_sales_summary (
 
 -- Stored procedure to refresh materialized view
 DELIMITER //
-CREATE PROCEDURE sp_refresh_monthly_sales_summary()
+CREATE PROCEDURE refresh_monthly_sales_summary()
 BEGIN
     DECLARE v_error_occurred BOOLEAN DEFAULT FALSE;
     
@@ -485,7 +485,7 @@ CREATE EVENT IF NOT EXISTS ev_refresh_monthly_sales_summary
 ON SCHEDULE EVERY 1 DAY
 STARTS TIMESTAMP(CURDATE() + INTERVAL 1 DAY, '02:00:00')
 DO
-  CALL sp_refresh_monthly_sales_summary();
+  CALL refresh_monthly_sales_summary();
 
 -- Enable event scheduler
 SET GLOBAL event_scheduler = ON;
@@ -509,5 +509,5 @@ SET GLOBAL event_scheduler = ON;
 -- CALL sp_restock_inventory(1, 50, 15.99, 'admin', @status, @message);
 -- SELECT @status, @message;
 
--- CALL sp_refresh_monthly_sales_summary();
+-- CALL refresh_monthly_sales_summary();
 -- SELECT * FROM mv_monthly_sales_summary ORDER BY sales_month DESC;
