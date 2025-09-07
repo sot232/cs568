@@ -119,6 +119,23 @@ GROUP BY c.customer_id, c.first_name, c.last_name, c.email, c.city, c.state, c.r
 HAVING total_orders > 0
 ORDER BY total_spent DESC;
 
+-- VIEW 5: BOOK INVENTORY STATUS VIEW
+-- Purpose: Monitor book inventory levels and sales performance
+CREATE OR REPLACE VIEW vw_book_inventory_status AS
+SELECT 
+    b.book_id, 
+    b.title, 
+    b.stock_quantity, 
+    b.min_stock_level,
+    CASE 
+        WHEN b.stock_quantity < b.min_stock_level THEN 'LOW STOCK'
+        ELSE 'OK'
+    END as stock_status,
+    COALESCE(SUM(oi.quantity), 0) as total_sold
+FROM books b
+LEFT JOIN order_items oi ON b.book_id = oi.book_id
+GROUP BY b.book_id, b.title, b.stock_quantity, b.min_stock_level;
+
 -- =====================================================
 -- STORED PROCEDURES WITH TRANSACTION HANDLING
 -- =====================================================
